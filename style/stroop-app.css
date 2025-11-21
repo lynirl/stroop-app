@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols+2&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: 'Noto Sans', 'Noto Sans Symbols 2', sans-serif;
+}
+
+body {
+    background-color: rgb(161, 164, 179);
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    color: white;
+}
+
+#start-button {
+background-color: #8e82c3;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+#start-button:hover {
+    background-color: #7ba75a;
+}
+
+.answer-button {
+    background-color: #2e2c2c;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.answer-button:hover {
+    background-color: #666464;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap : 7em;
+}
