@@ -5,7 +5,7 @@
 }
 
 body {
-    background-color: rgb(161, 164, 179);
+    background-color: rgb(0, 0, 0);
     display: flex;
     justify-content: center;
     margin-top: 5%;
@@ -23,37 +23,39 @@ h1 {
 }
 
 button {
-    font-size: 22px;
-    border-radius: 12px;
+    font-size: 23px;
+    border: solid 3px white;
 
 }
 
-#start-button {
-background-color: #8e82c3;
-  border: none;
-  color: white;
-  padding: 1em 2em;
+#main-button {
+background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 0.6em 2.5em;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  margin: 1em 2em;
+  margin: 2em 2em;
   cursor: pointer;
 }
 
-#start-button:hover {
-    background-color: #7ba75a;
+#main-button:hover {
+    background-color: #747574;
 }
 
 .answer-button {
-    background-color: #2e2c2c;
-    border: none;
+    background-color: #000000;
     color: white;
-    padding: 1em 2em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 5em;
+    height: 5em;
+    padding: 0;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
-    margin: 4px 2px;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 .answer-button:hover {
@@ -64,13 +66,13 @@ background-color: #8e82c3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap : 4em;
+    gap : 2em;
 }
 
 #row-container {
     display: flex;
     flex-direction: column;
-    gap: 5em;
+    gap: 2em;
 }
 
 .row:nth-child(1) {
