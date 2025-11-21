@@ -3,5 +3,6 @@
 const view = {
     //bouton de démarrage
     btnStart: document.getElementById("start-btn"),
-    textArea: document.getElementById("texte")
+    textArea: document.getElementById("texte"),
+    btnMain: document.getElementById("main-button")
 }
