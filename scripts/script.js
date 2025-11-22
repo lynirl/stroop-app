@@ -55,22 +55,28 @@ function isRight(){
 }
 
 //on assigne la tâche au bouton start
-btnMain.addEventListener('click', (event) => {
-    startMain()
-    //puis il disparait pq plus besoin
-    btnMain.style.display = "none";
-});
+if (btnMain){
+  btnMain.addEventListener('click', (event) => {
+      startMain()
+      //puis il disparait pq plus besoin
+      btnMain.style.display = "none";
+  });
+}
+
 
 //faire en sorte que les boutons fonctionnent aussi
 //on sélectionne le container pour les sélectionner tous
 const gameContainer = document.getElementById('game-container');
-gameContainer.addEventListener('click', (event) => {
-if (!event.target || !event.target.matches || !event.target.matches('.answer-button')){
-    return;
+
+if (gameContainer){
+  gameContainer.addEventListener('click', (event) => {
+  if (!event.target || !event.target.matches || !event.target.matches('.answer-button')){
+      return;
+  }
+  const text = (event.target.innerText || event.target.textContent).trim();
+  // on vérifie d'abord si la réponse est correcte
+      isRight(text);
+      // puis on passe à la vignette suivante
+      startMain();
+  });
 }
-const text = (event.target.innerText || event.target.textContent).trim();
-// on vérifie d'abord si la réponse est correcte
-    isRight(text);
-    // puis on passe à la vignette suivante
-    startMain();
-});

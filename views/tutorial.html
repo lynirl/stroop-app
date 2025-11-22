@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroopy app</title>
+    <link rel="stylesheet" href="../style/stroop-app.css">
+</head>
+<body>
+    <div class="center">
+        <h2 class="title2"> Tutoriel </h2>
+        <div id="tutorial-container">
+            <section class="tutorial-text">
+                <h3 class="tutorial-section-title">Votre tâche</h3>
+                <p>
+                    Vous allez voir des noms de couleur affichés dans différentes couleurs de police. 
+                    Votre objectif est d'identifier la <strong>couleur du mot</strong> (et non le mot écrit)
+                </p>
+
+                <h3 class="tutorial-section-title">Comment procéder</h3>
+                <ol class="tutorial-steps">
+                    <li>Cliquer sur le bouton <strong>« Démarrer »</strong> en bas de l'écran.</li>
+                    <li>Un mot-couleur apparaîtra.</li>
+                    <li>Déplacez la souris vers la case correspondant à la <strong> couleur du mot </strong>.</li>
+                    <li>Cliquez sur la case pour valider votre réponse.</li>
+                </ol>
+
+                <h3 class="tutorial-section-title">Exemple</h3>
+                <div class="tutorial-example" role="group" aria-label="Exemple de tâche">
+                    <p>
+                        Si vous voyez le mot <strong style="color:blue"> ROUGE </strong> écrit en bleu </span>,
+                        vous devez cliquer sur la case <strong>BLEU</strong>
+                    </p>
+                </div>
+            </section>
+            <div id="img-container">
+                <img src="../assets/screen-tutorial1.png" alt="Tutoriel image" id="tutorial-image">
+                <img src="../assets/screen-tutorial2.png" alt="Tutoriel image" id="tutorial-image">
+            </div>
+        </div>
+        <a href="main.html"><button id="start-button"> Lancer le test </button></a>
+    </div>
+</body>
+
+<script src = "../scripts/view.js"> </script>
+<script src = "../scripts/script.js"></script>
+</html>
