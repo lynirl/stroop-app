@@ -1,82 +1,110 @@
-//le script
+import { User } from "./model/User.js";
+import { Quiz } from "./model/Quiz.js";
+import { Question } from "./model/Question.js";
+import { Answer } from "./model/Answer.js";
 
-const btn = view.btnStart;
-const btnMain = view.btnMain;
+//pour les couleurs css
+const colorMap = {
+  rouge: "red",
+  bleu: "blue",
+  jaune: "yellow",
+  vert: "green"
+};
 
-function cramptes(){
-    view.textArea.innerHTML = "haha cramptés ^^"
+const frenchColors = Object.keys(colorMap);
+
+//avoir un element aleatoire de l'array
+function getRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// btn.addEventListener('click', cramptes);
+//elements de la vue
+const ui = {
+  colorText: document.getElementById("color-text"),
+  btnStart: document.getElementById("main-button"),
+  gameContainer: document.getElementById("game-container"),
+  endScreen: document.getElementById("end-screen"),
+  finalScore: document.getElementById("final-score"),
+  btnRestart: document.getElementById("btn-restart")
+};
 
-function getRandint(max) {
-  return Math.floor(Math.random() * max);
+//creation de l'user
+const user = new User("Lyn");
+
+//et du quiz
+const quiz = new Quiz("Stroop");
+user.setQuiz(quiz);
+
+//generer les 20 questions (aleatoires pr le moment, pas de congruence 80% tout ça)
+for (let i = 0; i < 20; i++) {
+  const colorName = getRandom(frenchColors);
+  const colorText = getRandom(frenchColors);
+
+  const q = new Question({ colorName, colorText });
+  quiz.addQuestion(q);
 }
 
-function startMain(){
-    //on cache le bouton au début de l'expérience
-   // btnMain.style.display = "none";
+//afficher une question
+function showCurrentQuestion() {
+  const q = quiz.getCurrentQuestion();
 
-    //les couleurs
-    const colors = ["red", "blue", "green", "yellow"];
+  ui.colorText.innerHTML = q.colorText.toUpperCase();
+  ui.colorText.style.color = colorMap[q.colorName];
 
-    //on choisit une couleur et un texte
-    const couleur = colors[getRandint(colors.length)];
-    const texte = colors[getRandint(colors.length)];
-    
-    //et on affiche
-    const colorText = document.getElementById("color-text");
-    colorText.innerHTML = texte;
-    colorText.style.color = couleur;
-    // stocke la couleur cible pour vérification
-    colorText.dataset.targetColor = couleur;
+  ui.colorText.dataset.target = q.colorName;
 }
 
-//vérifie si la couleur est la bonne ou non
-function isRight(){
+//finir le quiz
+function endQuiz() {
+  // on calcule le score
+  const score = quiz.getScore();
+  const total = quiz.questions.length;
 
-  //on normalise la chaise pour éviter les problèmes de casse
-  function normalize(s) { 
-    return s.trim().toLowerCase(); 
- }
+  //ça masque les elements du jeu
+  ui.gameContainer.style.display = "none";
+  ui.colorText.style.display = "none";
 
-  //ce qui a été cliqué
-  const clicked = normalize(arguments[0]);
-  
-  //ce qui est attendu
-  const target = normalize(document.getElementById('color-text').dataset.targetColor);
-
-  //si c'ets correct ou pas
-  const correct = clicked === target;
-
-  //debug
-  console.log('on a cliqué', clicked, ', la bonne réponse est:', target);
-  return correct;
+  //ecran de fin
+  ui.finalScore.innerHTML = `Score : ${score} / ${total}`;
+  ui.endScreen.style.display = "block";
 }
 
-//on assigne la tâche au bouton start
-if (btnMain){
-  btnMain.addEventListener('click', (event) => {
-      startMain()
-      //puis il disparait pq plus besoin
-      btnMain.style.display = "none";
+
+//enregistrer la réponse
+function submitAnswer(colorClickedFR) {
+  const q = quiz.getCurrentQuestion();
+
+  const ans = new Answer({
+    question: q,
+    colorAnswer: colorClickedFR,
+    initiation: 0,
+    movement: 0,
+    area: 0
   });
-}
 
+  quiz.addAnswer(ans);
 
-//faire en sorte que les boutons fonctionnent aussi
-//on sélectionne le container pour les sélectionner tous
-const gameContainer = document.getElementById('game-container');
+  //pour debug
+  console.log("Bonne réponse ?", ans.isCorrect());
 
-if (gameContainer){
-  gameContainer.addEventListener('click', (event) => {
-  if (!event.target || !event.target.matches || !event.target.matches('.answer-button')){
-      return;
+  //passer à la suite (ou non)
+  if (quiz.goNext()) {
+    showCurrentQuestion();
+  } else {
+    endQuiz();
   }
-  const text = (event.target.innerText || event.target.textContent).trim();
-  // on vérifie d'abord si la réponse est correcte
-      isRight(text);
-      // puis on passe à la vignette suivante
-      startMain();
-  });
 }
+
+//eventListeners
+ui.btnStart.addEventListener("click", () => {
+  showCurrentQuestion();
+  ui.btnStart.style.display = "none";
+});
+
+ui.gameContainer.addEventListener("click", evt => {
+  if (!evt.target.matches(".answer-button")) return;
+
+  const clicked = evt.target.innerText.trim().toLowerCase();
+
+  submitAnswer(clicked);
+});
