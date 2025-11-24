@@ -35,6 +35,10 @@ const user = new User("Lyn");
 const quiz = new Quiz("Stroop");
 user.setQuiz(quiz);
 
+// Chronos 
+let initiationTime = 0;
+let movementTime = 0;
+
 //generer les 20 questions (aleatoires pr le moment, pas de congruence 80% tout ça)
 for (let i = 0; i < 20; i++) {
   const colorName = getRandom(frenchColors);
@@ -61,6 +65,7 @@ function showCurrentQuestion() {
 
 //finir le quiz
 function endQuiz() {
+
   // on calcule le score
   const score = quiz.getScore();
   const total = quiz.questions.length;
@@ -72,18 +77,24 @@ function endQuiz() {
   //ecran de fin
   ui.finalScore.innerHTML = `Score : ${score} / ${total}`;
   ui.endScreen.style.display = "block";
+
+  isMouseLocked = false;
 }
 
 
 //enregistrer la réponse
 function submitAnswer(colorClickedFR) {
+
+  endTimer();
+  console.log("Mouvement time :", movementTime);
+
   const q = quiz.getCurrentQuestion();
 
   const ans = new Answer({
     question: q,
     colorAnswer: colorClickedFR,
-    initiation: 0,
-    movement: 0,
+    initiation: initiationTime,
+    movement: movementTime,
     area: 0
   });
 
@@ -101,13 +112,20 @@ function submitAnswer(colorClickedFR) {
   }
 }
 
-//eventListeners
+// GESTION DES EVENTS
+//
+
+// Clic bouton démarrer
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
   ui.btnStart.style.display = "none";
   document.body.style.cursor = "none";
+  isMouseLocked = false;
+  initiationTime = performance.now();
+
 });
 
+// Clic bouton de réponse
 ui.gameContainer.addEventListener("click", evt => {
   if (!evt.target.matches(".answer-button")) return;
 
@@ -115,3 +133,30 @@ ui.gameContainer.addEventListener("click", evt => {
 
   submitAnswer(clicked);
 });
+
+// Mouvement de la souris
+
+let isMouseLocked = true;
+
+document.addEventListener("mousemove", (event) => {
+  if (!isMouseLocked) {
+    registerInitiationTimer();
+    isMouseLocked = true;
+    registerMovementTimer();
+  }
+});
+
+// Enregistrement
+
+function registerInitiationTimer() {
+  initiationTime = ((performance.now() - initiationTime) / 1000).toFixed(2);
+  console.log("Initiation time :", initiationTime);
+}
+
+function registerMovementTimer() {
+  movementTime = performance.now();
+}
+
+function endTimer() {
+  movementTime = ((performance.now() - initiationTime) / 1000).toFixed(2);
+}
