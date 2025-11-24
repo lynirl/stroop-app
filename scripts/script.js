@@ -46,12 +46,17 @@ for (let i = 0; i < 20; i++) {
 
 //afficher une question
 function showCurrentQuestion() {
-  const q = quiz.getCurrentQuestion();
 
-  ui.colorText.innerHTML = q.colorText.toUpperCase();
-  ui.colorText.style.color = colorMap[q.colorName];
+  // Afficher le texte au bout de 300ms 
+  setTimeout(() => {
+    const q = quiz.getCurrentQuestion();
 
-  ui.colorText.dataset.target = q.colorName;
+    ui.colorText.innerHTML = q.colorText.toUpperCase();
+    ui.colorText.style.color = colorMap[q.colorName];
+
+    ui.colorText.dataset.target = q.colorName;
+  }, 300); 
+  
 }
 
 //finir le quiz
@@ -89,7 +94,8 @@ function submitAnswer(colorClickedFR) {
 
   //passer à la suite (ou non)
   if (quiz.goNext()) {
-    showCurrentQuestion();
+    ui.btnStart.style.display = "block";
+    ui.colorText.innerHTML = "";
   } else {
     endQuiz();
   }
@@ -99,6 +105,7 @@ function submitAnswer(colorClickedFR) {
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
   ui.btnStart.style.display = "none";
+  document.body.style.cursor = "none";
 });
 
 ui.gameContainer.addEventListener("click", evt => {

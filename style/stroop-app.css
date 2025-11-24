@@ -9,7 +9,9 @@ body {
     display: flex;
     justify-content: center;
     color: white;
-    margin : 5%
+    margin : 5%;
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 .center {
