@@ -127,3 +127,11 @@ background-color: #ffffff;
     display: flex  ;
     gap: 30em;
 }
+
+#wrong-sign {
+    color: red;
+    font-size: 100px;
+    position: absolute;
+    top: 20%;
+    user-select: none;
+}

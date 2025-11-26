@@ -25,7 +25,9 @@ const ui = {
   gameContainer: document.getElementById("game-container"),
   endScreen: document.getElementById("end-screen"),
   finalScore: document.getElementById("final-score"),
-  btnRestart: document.getElementById("btn-restart")
+  btnRestart: document.getElementById("btn-restart"),
+  answerButtons: document.querySelectorAll(".answer-button"),
+  wrongSign: document.getElementById("wrong-sign")
 };
 
 //creation de l'user
@@ -38,6 +40,9 @@ user.setQuiz(quiz);
 // Chronos 
 let initiationTime = 0;
 let movementTime = 0;
+
+//Réponses infos 
+let rightAnswerValue = "";
 
 //generer les 20 questions (aleatoires pr le moment, pas de congruence 80% tout ça)
 for (let i = 0; i < 20; i++) {
@@ -57,10 +62,11 @@ function showCurrentQuestion() {
 
     ui.colorText.innerHTML = q.colorText.toUpperCase();
     ui.colorText.style.color = colorMap[q.colorName];
+    rightAnswerValue = q.colorName;
 
     ui.colorText.dataset.target = q.colorName;
-  }, 300); 
-  
+    document.body.style.cursor = "default";
+  }, 300);   
 }
 
 //finir le quiz
@@ -126,13 +132,22 @@ ui.btnStart.addEventListener("click", () => {
 });
 
 // Clic bouton de réponse
-ui.gameContainer.addEventListener("click", evt => {
-  if (!evt.target.matches(".answer-button")) return;
 
-  const clicked = evt.target.innerText.trim().toLowerCase();
+for (let answerButton of ui.answerButtons) {
+  answerButton.addEventListener("click", evt => {
+    const clicked = evt.target.innerText.trim().toLowerCase();
 
-  submitAnswer(clicked);
-});
+    if (clicked !== rightAnswerValue) {
+      ui.wrongSign.style.display = "block";
+      ui.btnStart.style.display = "none";
+      setTimeout(() => {
+        ui.wrongSign.style.display = "none";
+      }, 2000);
+    }
+
+    submitAnswer(clicked);
+  });
+}
 
 // Mouvement de la souris
 
