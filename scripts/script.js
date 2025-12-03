@@ -42,8 +42,12 @@ let results = [];
 
 
 // Chronos 
+let initiationStart = 0;
+let movementStart = 0;
 let initiationTime = 0;
 let movementTime = 0;
+let hasMoved = false;
+
 
 //Réponses infos 
 let rightAnswerValue = "";
@@ -91,8 +95,8 @@ function endQuiz() {
   isMouseLocked = false;
   
   savedata({
-    user: user.name,
-    quiz: quiz.title,
+    user: user.pseudo,
+    quiz: quiz.quizType,
     trials: results
   });
 }
@@ -149,7 +153,11 @@ ui.btnStart.addEventListener("click", () => {
   ui.btnStart.style.display = "none";
   document.body.style.cursor = "none";
   isMouseLocked = false;
-  initiationTime = performance.now();
+  initiationStart = performance.now();
+  movementStart = 0;
+  initiationTime = 0;
+  movementTime = 0;
+  hasMoved = false;
 
 });
 
@@ -175,13 +183,17 @@ for (let answerButton of ui.answerButtons) {
 
 let isMouseLocked = true;
 
-document.addEventListener("mousemove", (event) => {
-  if (!isMouseLocked) {
-    registerInitiationTimer();
-    isMouseLocked = true;
-    registerMovementTimer();
+document.addEventListener("mousemove", () => {
+  if (!hasMoved) {
+    hasMoved = true;
+
+    initiationTime = ((performance.now() - initiationStart) / 1000).toFixed(3);
+    movementStart = performance.now();
+
+    console.log("Initiation time :", initiationTime);
   }
 });
+
 
 // Enregistrement
 
@@ -195,15 +207,23 @@ function registerMovementTimer() {
 }
 
 function endTimer() {
-  movementTime = ((performance.now() - initiationTime) / 1000).toFixed(2);
+  if (movementStart > 0) {
+    movementTime = ((performance.now() - movementStart) / 1000).toFixed(3);
+  } else {
+    movementTime = null;
+  }
+
+  console.log("Movement time :", movementTime);
 }
+
 
 //sauvegarder les données
 
 function savedata(data) {
     let xhr = new XMLHttpRequest();
-    let url = "https://rafael.laboissiere.net/m1-miashs-2025-s7/Xo7Yei8e/savedata.php"
+    let url = "https://corsproxy.io/?url=https://rafael.laboissiere.net/m1-miashs-2025-s7/Xo7Yei8e/savedata.php"
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
+    console.log(">>>>>>>> ENVOI JSON", JSON.stringify(data));
     xhr.send(JSON.stringify(data));
 }
