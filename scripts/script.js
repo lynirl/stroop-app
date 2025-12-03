@@ -147,18 +147,21 @@ function submitAnswer(colorClickedFR) {
 // GESTION DES EVENTS
 //
 
+// En cas d'erreur, pour bloquer pendant l'affichage du signe "X"
+let isAnswerLocked = false;
+
 // Clic bouton démarrer
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
   ui.btnStart.style.display = "none";
   document.body.style.cursor = "none";
   isMouseLocked = false;
+  isAnswerLocked = false;
   initiationStart = performance.now();
   movementStart = 0;
   initiationTime = 0;
   movementTime = 0;
   hasMoved = false;
-
 });
 
 // Clic bouton de réponse
@@ -166,16 +169,18 @@ ui.btnStart.addEventListener("click", () => {
 for (let answerButton of ui.answerButtons) {
   answerButton.addEventListener("click", evt => {
     const clicked = evt.target.innerText.trim().toLowerCase();
-
     if (clicked !== rightAnswerValue) {
+      if (isAnswerLocked) return;
       ui.wrongSign.style.display = "block";
       ui.btnStart.style.display = "none";
       setTimeout(() => {
         ui.wrongSign.style.display = "none";
+        isAnswerLocked = true;
+        submitAnswer(clicked);
       }, 2000);
+    } else {
+      submitAnswer(clicked);
     }
-
-    submitAnswer(clicked);
   });
 }
 
