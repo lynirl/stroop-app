@@ -37,6 +37,10 @@ const user = new User("Lyn");
 const quiz = new Quiz("Stroop");
 user.setQuiz(quiz);
 
+//et du json final
+let results = [];
+
+
 // Chronos 
 let initiationTime = 0;
 let movementTime = 0;
@@ -85,6 +89,12 @@ function endQuiz() {
   ui.endScreen.style.display = "block";
 
   isMouseLocked = false;
+  
+  savedata({
+    user: user.name,
+    quiz: quiz.title,
+    trials: results
+  });
 }
 
 
@@ -105,6 +115,18 @@ function submitAnswer(colorClickedFR) {
   });
 
   quiz.addAnswer(ans);
+
+  //stocker dans json
+  results.push({
+    questionText: q.colorText,
+    inkColor: q.colorName,
+    answer: colorClickedFR,
+    correct: ans.isCorrect(),
+    initiationTime: initiationTime,
+    movementTime: movementTime,
+    timestamp: Date.now()
+  });
+
 
   //pour debug
   console.log("Bonne réponse ?", ans.isCorrect());
@@ -174,4 +196,14 @@ function registerMovementTimer() {
 
 function endTimer() {
   movementTime = ((performance.now() - initiationTime) / 1000).toFixed(2);
+}
+
+//sauvegarder les données
+
+function savedata(data) {
+    let xhr = new XMLHttpRequest();
+    let url = "https://rafael.laboissiere.net/m1-miashs-2025-s7/Xo7Yei8e/savedata.php"
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(data));
 }
