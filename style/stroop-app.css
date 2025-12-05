@@ -133,3 +133,19 @@ background-color: #ffffff;
     flex-direction: column;
     gap: 2%;
 }
+
+#wrong-sign {
+    color: red;
+    font-size: 100px;
+    position: absolute;
+    top: 20%;
+    user-select: none;
+}
+
+#warning-message {
+    color: yellow;
+    font-size: 30px;
+    position: absolute;
+    top: 80%;
+    user-select: none;
+}

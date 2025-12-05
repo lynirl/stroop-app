@@ -51,6 +51,7 @@ let hasMoved = false;
 
 //Réponses infos 
 let rightAnswerValue = "";
+let gameInitiationTime = 0;
 
 //generer les 20 questions (aleatoires pr le moment, pas de congruence 80% tout ça)
 for (let i = 0; i < 20; i++) {
@@ -94,19 +95,22 @@ function endQuiz() {
 
   isMouseLocked = false;
   
-  savedata({
+  /* savedata({
     user: user.pseudo,
     quiz: quiz.quizType,
     trials: results
-  });
+  }); */
 }
-
 
 //enregistrer la réponse
 function submitAnswer(colorClickedFR) {
 
   endTimer();
   console.log("Mouvement time :", movementTime);
+
+  if (initiationTime > 0.5) {
+    document.getElementById("warning-message").style.display = "block";
+  } 
 
   const q = quiz.getCurrentQuestion();
 
@@ -131,7 +135,6 @@ function submitAnswer(colorClickedFR) {
     timestamp: Date.now()
   });
 
-
   //pour debug
   console.log("Bonne réponse ?", ans.isCorrect());
 
@@ -153,10 +156,12 @@ let isAnswerLocked = false;
 // Clic bouton démarrer
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
+  document.getElementById("warning-message").style.display = "none";
   ui.btnStart.style.display = "none";
   document.body.style.cursor = "none";
   isMouseLocked = false;
   isAnswerLocked = false;
+  gameInitiationTime = performance.now();
   initiationStart = performance.now();
   movementStart = 0;
   initiationTime = 0;
@@ -202,15 +207,6 @@ document.addEventListener("mousemove", () => {
 
 // Enregistrement
 
-function registerInitiationTimer() {
-  initiationTime = ((performance.now() - initiationTime) / 1000).toFixed(2);
-  console.log("Initiation time :", initiationTime);
-}
-
-function registerMovementTimer() {
-  movementTime = performance.now();
-}
-
 function endTimer() {
   if (movementStart > 0) {
     movementTime = ((performance.now() - movementStart) / 1000).toFixed(3);
@@ -221,7 +217,6 @@ function endTimer() {
   console.log("Movement time :", movementTime);
 }
 
-
 //sauvegarder les données
 
 function savedata(data) {
@@ -231,4 +226,14 @@ function savedata(data) {
     xhr.setRequestHeader("Content-Type", "application/json");
     console.log(">>>>>>>> ENVOI JSON", JSON.stringify(data));
     xhr.send(JSON.stringify(data));
+}
+
+
+// Enregistrement coordonnées clics
+
+function coordinate(event) {
+        let x = event.clientX;
+        let y = event.clientY;
+        document.getElementById("X").value = x;
+        document.getElementById("Y").value = y;
 }
