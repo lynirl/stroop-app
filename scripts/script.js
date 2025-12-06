@@ -107,18 +107,18 @@ function endQuiz() {
   isMouseLocked = false;
   
 //envoyer les donnees
- savedata({
-    user: {
-      nom: user.nom,
-      age: user.age,
-      genre: user.genre,
-      lateralite: user.lateralite,
-      daltonisme: user.daltonisme,
-      periph: user.periph
-    },
-    quiz: quiz.title,
-    trials: results
-  });
+//  savedata({
+//     user: {
+//       nom: user.nom,
+//       age: user.age,
+//       genre: user.genre,
+//       lateralite: user.lateralite,
+//       daltonisme: user.daltonisme,
+//       periph: user.periph
+//     },
+//     quiz: quiz.title,
+//     trials: results
+//   });
 }
 
 //enregistrer la reponse
