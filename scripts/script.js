@@ -1,6 +1,5 @@
 import { User } from "./model/User.js";
 import { Quiz } from "./model/Quiz.js";
-import { Question } from "./model/Question.js";
 import { Answer } from "./model/Answer.js";
 
 //pour les couleurs css
@@ -8,7 +7,7 @@ const colorMap = {
   rouge: "red",
   bleu: "blue",
   jaune: "yellow",
-  vert: "green"
+  vert: "green",
 };
 
 const frenchColors = Object.keys(colorMap);
@@ -27,13 +26,12 @@ const ui = {
   finalScore: document.getElementById("final-score"),
   btnRestart: document.getElementById("btn-restart"),
   answerButtons: document.querySelectorAll(".answer-button"),
-  wrongSign: document.getElementById("wrong-sign")
+  wrongSign: document.getElementById("wrong-sign"),
 };
 
 //données du formulaire
 let participantData = JSON.parse(localStorage.getItem("participantData")) || {};
 console.log("participant data:", participantData);
-
 
 //creation de l'user
 //en utilisant le localstorage
@@ -43,40 +41,26 @@ const user = new User(formData);
 //nettoyer pour la session suivante
 localStorage.removeItem("participantData");
 
-
-//et du quiz
-const quiz = new Quiz("Stroop");
+//creation du quiz
+const quiz = new Quiz(2);
 user.setQuiz(quiz);
 
 //et du json final
 let results = [];
 
-
-// Chronos 
+// Chronos
 let initiationStart = 0;
 let movementStart = 0;
 let initiationTime = 0;
 let movementTime = 0;
 let hasMoved = false;
 
-
-//Réponses infos 
+//Réponses infos
 let rightAnswerValue = "";
-let gameInitiationTime = 0;
-
-//generer les 20 questions (aleatoires pr le moment, pas de congruence 80% tout ça)
-for (let i = 0; i < 20; i++) {
-  const colorName = getRandom(frenchColors);
-  const colorText = getRandom(frenchColors);
-
-  const q = new Question({ colorName, colorText });
-  quiz.addQuestion(q);
-}
 
 //afficher une question
 function showCurrentQuestion() {
-
-  // Afficher le texte au bout de 300ms 
+  // Afficher le texte au bout de 300ms
   setTimeout(() => {
     const q = quiz.getCurrentQuestion();
 
@@ -86,12 +70,11 @@ function showCurrentQuestion() {
 
     ui.colorText.dataset.target = q.colorName;
     document.body.style.cursor = "default";
-  }, 300);   
+  }, 300);
 }
 
 //finir le quiz
 function endQuiz() {
-
   // on calcule le score
   const score = quiz.getScore();
   const total = quiz.questions.length;
@@ -105,25 +88,24 @@ function endQuiz() {
   ui.endScreen.style.display = "block";
 
   isMouseLocked = false;
-  
-//envoyer les donnees
-//  savedata({
-//     user: {
-//       nom: user.nom,
-//       age: user.age,
-//       genre: user.genre,
-//       lateralite: user.lateralite,
-//       daltonisme: user.daltonisme,
-//       periph: user.periph
-//     },
-//     quiz: quiz.title,
-//     trials: results
-//   });
+
+  //envoyer les donnees
+  //  savedata({
+  //     user: {
+  //       nom: user.nom,
+  //       age: user.age,
+  //       genre: user.genre,
+  //       lateralite: user.lateralite,
+  //       daltonisme: user.daltonisme,
+  //       periph: user.periph
+  //     },
+  //     quiz: quiz.title,
+  //     trials: results
+  //   });
 }
 
 //enregistrer la reponse
 function submitAnswer(colorClickedFR) {
-
   endTimer();
   isTracking = false;
 
@@ -132,7 +114,7 @@ function submitAnswer(colorClickedFR) {
 
   if (initiationTime > 0.5) {
     document.getElementById("warning-message").style.display = "block";
-  } 
+  }
 
   const q = quiz.getCurrentQuestion();
 
@@ -141,7 +123,7 @@ function submitAnswer(colorClickedFR) {
     colorAnswer: colorClickedFR,
     initiation: initiationTime,
     movement: movementTime,
-    area: 0
+    area: 0,
   });
 
   quiz.addAnswer(ans);
@@ -155,7 +137,7 @@ function submitAnswer(colorClickedFR) {
     initiationTime: initiationTime,
     movementTime: movementTime,
     timestamp: Date.now(),
-    coordinates: coordSamples
+    coordinates: coordSamples,
   });
 
   //pour debug
@@ -172,7 +154,7 @@ function submitAnswer(colorClickedFR) {
 
 let isAnswerLocked = true;
 
-//bouton demarrer 
+//bouton demarrer
 // (on initie tout)
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
@@ -181,19 +163,18 @@ ui.btnStart.addEventListener("click", () => {
   document.body.style.cursor = "none";
   isMouseLocked = false;
   isAnswerLocked = false;
-  gameInitiationTime = performance.now();
   initiationStart = performance.now();
   movementStart = 0;
   initiationTime = 0;
   movementTime = 0;
   hasMoved = false;
-  coordSamples = [];     
+  coordSamples = [];
   isTracking = true;
 });
 
 //bouton de reponse
 for (let answerButton of ui.answerButtons) {
-  answerButton.addEventListener("click", evt => {
+  answerButton.addEventListener("click", (evt) => {
     const clicked = evt.target.innerText.trim().toLowerCase();
     if (clicked !== rightAnswerValue) {
       if (isAnswerLocked) return;
@@ -231,7 +212,6 @@ document.addEventListener("mousemove", (event) => {
   }
 });
 
-
 //enregistrer MT
 function endTimer() {
   if (movementStart > 0) {
@@ -245,28 +225,27 @@ function endTimer() {
 
 //sauvegarder les données
 function savedata(data) {
-    let xhr = new XMLHttpRequest();
-    let url = "https://corsproxy.io/?url=https://rafael.laboissiere.net/m1-miashs-2025-s7/Xo7Yei8e/savedata.php"
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    console.log(">>>>>>>> ENVOI JSON", JSON.stringify(data));
-    xhr.send(JSON.stringify(data));
+  let xhr = new XMLHttpRequest();
+  let url =
+    "https://corsproxy.io/?url=https://rafael.laboissiere.net/m1-miashs-2025-s7/Xo7Yei8e/savedata.php";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  console.log(">>>>>>>> ENVOI JSON", JSON.stringify(data));
+  xhr.send(JSON.stringify(data));
 }
-
 
 //coordonnees des clics
 
-let isTracking = false;          
-let coordSamples = [];         
-let isTrackingLoopRunning = false
+let isTracking = false;
+let coordSamples = [];
+let isTrackingLoopRunning = false;
 
-function trackingMouse(){
+function trackingMouse() {
   if (isTrackingLoopRunning) return; // éviter les doublons
   isTrackingLoopRunning = true;
 
   const targetDelta = 1000 / 70;
   let last = performance.now();
-
 
   function loop() {
     const now = performance.now();
@@ -279,13 +258,12 @@ function trackingMouse(){
         coordSamples.push({
           t: now,
           x: lastMouseX,
-          y: lastMouseY
+          y: lastMouseY,
         });
       }
     }
 
-  requestAnimationFrame(loop);
-}
+    requestAnimationFrame(loop);
+  }
   loop();
 }
-
