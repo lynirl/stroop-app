@@ -167,7 +167,7 @@ function submitAnswer(colorClickedFR) {
 }
 
 
-let isAnswerLocked = false;
+let isAnswerLocked = true;
 
 //bouton demarrer 
 // (on initie tout)
