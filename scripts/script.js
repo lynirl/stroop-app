@@ -30,8 +30,19 @@ const ui = {
   wrongSign: document.getElementById("wrong-sign")
 };
 
+//données du formulaire
+let participantData = JSON.parse(localStorage.getItem("participantData")) || {};
+console.log("participant data:", participantData);
+
+
 //creation de l'user
-const user = new User("Lyn");
+//en utilisant le localstorage
+let formData = JSON.parse(localStorage.getItem("participantData")) || {};
+
+const user = new User(formData);
+//nettoyer pour la session suivante
+localStorage.removeItem("participantData");
+
 
 //et du quiz
 const quiz = new Quiz("Stroop");
@@ -95,14 +106,22 @@ function endQuiz() {
 
   isMouseLocked = false;
   
-  /* savedata({
-    user: user.pseudo,
-    quiz: quiz.quizType,
+  //envoyer les donnees
+  savedata({
+    user: {
+      nom: user.nom,
+      age: user.age,
+      genre: user.genre,
+      lateralite: user.lateralite,
+      daltonisme: user.daltonisme,
+      periph: user.periph
+    },
+    quiz: quiz.title,
     trials: results
-  }); */
+  });
 }
 
-//enregistrer la réponse
+//enregistrer la reponse
 function submitAnswer(colorClickedFR) {
 
   endTimer();
@@ -124,7 +143,7 @@ function submitAnswer(colorClickedFR) {
 
   quiz.addAnswer(ans);
 
-  //stocker dans json
+  //stocker dans json a la fin de la question
   results.push({
     questionText: q.colorText,
     inkColor: q.colorName,
@@ -147,13 +166,11 @@ function submitAnswer(colorClickedFR) {
   }
 }
 
-// GESTION DES EVENTS
-//
 
-// En cas d'erreur, pour bloquer pendant l'affichage du signe "X"
 let isAnswerLocked = false;
 
-// Clic bouton démarrer
+//bouton demarrer 
+// (on initie tout)
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
   document.getElementById("warning-message").style.display = "none";
@@ -169,8 +186,7 @@ ui.btnStart.addEventListener("click", () => {
   hasMoved = false;
 });
 
-// Clic bouton de réponse
-
+//bouton de reponse
 for (let answerButton of ui.answerButtons) {
   answerButton.addEventListener("click", evt => {
     const clicked = evt.target.innerText.trim().toLowerCase();
@@ -189,8 +205,7 @@ for (let answerButton of ui.answerButtons) {
   });
 }
 
-// Mouvement de la souris
-
+//enregistrer IT
 let isMouseLocked = true;
 
 document.addEventListener("mousemove", () => {
@@ -205,8 +220,7 @@ document.addEventListener("mousemove", () => {
 });
 
 
-// Enregistrement
-
+//enregistrer MT
 function endTimer() {
   if (movementStart > 0) {
     movementTime = ((performance.now() - movementStart) / 1000).toFixed(3);
@@ -218,7 +232,6 @@ function endTimer() {
 }
 
 //sauvegarder les données
-
 function savedata(data) {
     let xhr = new XMLHttpRequest();
     let url = "https://corsproxy.io/?url=https://rafael.laboissiere.net/m1-miashs-2025-s7/Xo7Yei8e/savedata.php"
@@ -229,7 +242,7 @@ function savedata(data) {
 }
 
 
-// Enregistrement coordonnées clics
+//coordonnees des clics
 
 function coordinate(event) {
         let x = event.clientX;

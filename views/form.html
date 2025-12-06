@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/favicon.png" type="image/x-icon">
+    <title>Stroopy app</title>
+    <link rel="stylesheet" href="../style/stroop-app.css">
+</head>
+<body>
+<form id="user-form" style="max-width: 400px; margin: 20px auto; font-family: sans-serif;">
+
+  <h2>Questionnaire participant</h2>
+
+  <p>Veuillez remplir les informations ci-dessous avant de commencer le test.</p>
+
+  <!-- le nom -->
+  <label for="nom">Nom :</label>
+  <input type="text" id="nom" name="nom" required>
+
+  <!-- l'âge -->
+  <label for="age">Âge :</label>
+  <input type="number" id="age" name="age" min="1" max="120" required>
+
+  <!-- le genre -->
+  <label for="genre">Genre :</label>
+  <select id="genre" name="genre" required>
+    <option value="">-- Choisir --</option>
+    <option value="femme">Femme</option>
+    <option value="homme">Homme</option>
+    <option value="non-binaire">Non-binaire</option>
+  </select>
+
+  <!-- la latéralité -->
+  <label for="lateralite">Latéralité (main dominante) :</label>
+  <select id="lateralite" name="lateralite" required>
+    <option value="">-- Choisir --</option>
+    <option value="droitière">Main droite</option>
+    <option value="gauchère">Main gauche</option>
+    <option value="ambidextre">Ambidextre</option>
+  </select>
+
+  <!-- le daltonisme -->
+  <label for="daltonisme">Daltonisme :</label>
+  <select id="daltonisme" name="daltonisme" required>
+    <option value="">-- Choisir --</option>
+    <option value="non">Aucun</option>
+    <option value="protanopie">Protanopie</option>
+    <option value="deutéranopie">Deutéranopie</option>
+    <option value="tritanopie">Tritanopie</option>
+    <option value="autre">Autre / Incertain</option>
+  </select>
+
+  <!-- le type d'appareil -->
+  <label for="periph">Vous utilisez :</label>
+  <select id="periph" name="periph" required>
+    <option value="">-- Choisir --</option>
+    <option value="souris">Souris</option>
+    <option value="trackpad">Trackpad / pavé tactile</option>
+    <option value="stylet">Stylet</option>
+  </select>
+
+  <!-- submit!! -->
+  <button type="submit" style="margin-top: 15px; padding: 8px 12px;">Commencer le test</button>
+
+</form>
+
+</body>
+<script type="module" src = "../scripts/form.js"></script>
+</html>
