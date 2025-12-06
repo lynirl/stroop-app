@@ -125,6 +125,9 @@ function endQuiz() {
 function submitAnswer(colorClickedFR) {
 
   endTimer();
+  isTracking = false;
+
+  console.log(coordSamples);
   console.log("Mouvement time :", movementTime);
 
   if (initiationTime > 0.5) {
@@ -151,7 +154,8 @@ function submitAnswer(colorClickedFR) {
     correct: ans.isCorrect(),
     initiationTime: initiationTime,
     movementTime: movementTime,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    coordinates: coordSamples
   });
 
   //pour debug
@@ -165,7 +169,6 @@ function submitAnswer(colorClickedFR) {
     endQuiz();
   }
 }
-
 
 let isAnswerLocked = true;
 
@@ -184,6 +187,8 @@ ui.btnStart.addEventListener("click", () => {
   initiationTime = 0;
   movementTime = 0;
   hasMoved = false;
+  coordSamples = [];     
+  isTracking = true;
 });
 
 //bouton de reponse
@@ -208,8 +213,15 @@ for (let answerButton of ui.answerButtons) {
 //enregistrer IT
 let isMouseLocked = true;
 
-document.addEventListener("mousemove", () => {
+let lastMouseX = 0;
+let lastMouseY = 0;
+
+document.addEventListener("mousemove", (event) => {
   if (!hasMoved) {
+    trackingMouse();
+
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
     hasMoved = true;
 
     initiationTime = ((performance.now() - initiationStart) / 1000).toFixed(3);
@@ -250,3 +262,37 @@ function coordinate(event) {
         document.getElementById("X").value = x;
         document.getElementById("Y").value = y;
 }
+
+let isTracking = false;          
+let coordSamples = [];         
+let isTrackingLoopRunning = false
+
+function trackingMouse(){
+  if (isTrackingLoopRunning) return; // éviter les doublons
+  isTrackingLoopRunning = true;
+
+  const targetDelta = 1000 / 70;
+  let last = performance.now();
+
+
+  function loop() {
+    const now = performance.now();
+    const delta = now - last;
+
+    if (delta >= targetDelta) {
+      last = now - (delta % targetDelta);
+
+      if (isTracking) {
+        coordSamples.push({
+          t: now,
+          x: lastMouseX,
+          y: lastMouseY
+        });
+      }
+    }
+
+  requestAnimationFrame(loop);
+}
+  loop();
+}
+
