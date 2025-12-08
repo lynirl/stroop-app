@@ -42,8 +42,9 @@ const user = new User(formData);
 localStorage.removeItem("participantData");
 
 //creation du quiz
-const quiz = new Quiz(2);
+const quiz = new Quiz(1);
 user.setQuiz(quiz);
+console.log("Quiz questions : ", quiz.questions);
 
 //et du json final
 let results = [];

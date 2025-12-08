@@ -10,36 +10,59 @@ export class Quiz {
 
   generateQuestions(type) {
     let questions = [];
-
-    const congruent = [
+     // Type 1: 80% congruent 20% incongruent
+    const Type1Quiz = [
       { colorName: "rouge", colorText: "rouge" },
       { colorName: "vert", colorText: "vert" },
-      { colorName: "bleu", colorText: "bleu" },
-      { colorName: "jaune", colorText: "jaune" },
-    ];
-
-    const incongruent = [
+      { colorName: "vert", colorText: "rouge" },
+      { colorName: "vert", colorText: "rouge" },
+      { colorName: "vert", colorText: "rouge" },
       { colorName: "vert", colorText: "rouge" },
       { colorName: "rouge", colorText: "vert" },
+      { colorName: "rouge", colorText: "vert" },
+      { colorName: "rouge", colorText: "vert" },
+      { colorName: "rouge", colorText: "vert" },
+      { colorName: "bleu", colorText: "bleu" },
+      { colorName: "bleu", colorText: "bleu" },
+      { colorName: "bleu", colorText: "bleu" },
+      { colorName: "bleu", colorText: "bleu" },
+      { colorName: "jaune", colorText: "jaune" },
+      { colorName: "jaune", colorText: "jaune" },
+      { colorName: "jaune", colorText: "jaune" },
+      { colorName: "jaune", colorText: "jaune" },
       { colorName: "bleu", colorText: "jaune" },
       { colorName: "jaune", colorText: "bleu" },
-    ];
+    ]
 
-    // Type 1: 80% congruent 20% incongruent
+
+    // Type 2: 80% incongruent 20% congruent
+    const Type2Quiz = [
+      { colorName: "bleu", colorText: "bleu" },
+      { colorName: "jaune", colorText: "jaune" },
+      { colorName: "bleu", colorText: "jaune" },
+      { colorName: "bleu", colorText: "jaune" },
+      { colorName: "bleu", colorText: "jaune" },
+      { colorName: "bleu", colorText: "jaune" },
+      { colorName: "jaune", colorText: "bleu" },
+      { colorName: "jaune", colorText: "bleu" },
+      { colorName: "jaune", colorText: "bleu" },
+      { colorName: "jaune", colorText: "bleu" },
+      { colorName: "rouge", colorText: "rouge" },
+      { colorName: "rouge", colorText: "rouge" },
+      { colorName: "rouge", colorText: "rouge" },
+      { colorName: "rouge", colorText: "rouge" },
+      { colorName: "vert", colorText: "vert" },
+      { colorName: "vert", colorText: "vert" },
+      { colorName: "vert", colorText: "vert" },
+      { colorName: "vert", colorText: "vert" },
+      { colorName: "rouge", colorText: "vert" },
+      { colorName: "vert", colorText: "rouge" },
+    ]
+
     if (type === 1) {
-      for (let i = 0; i < 16; i++) {
-        questions.push(congruent[Math.floor(Math.random() * congruent.length)]);
-      }
-      questions.push(...incongruent);
-
-    // Type 2: 20% congruent 80% incongruent
+      questions.push(...Type1Quiz);
     } else {
-      questions.push(...congruent);
-      for (let i = 0; i < 16; i++) {
-        questions.push(
-          incongruent[Math.floor(Math.random() * incongruent.length)]
-        );
-      }
+      questions.push(...Type2Quiz);
     }
 
     questions = this.shuffleArray(questions);
