@@ -42,7 +42,7 @@ const user = new User(formData);
 localStorage.removeItem("participantData");
 
 //creation du quiz
-const quiz = new Quiz(1);
+const quiz = new Quiz(2);
 user.setQuiz(quiz);
 console.log("Quiz questions : ", quiz.questions);
 
