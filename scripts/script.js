@@ -228,7 +228,7 @@ function endTimer() {
 function savedata(data) {
   let xhr = new XMLHttpRequest();
   let url =
-    "https://corsproxy.io/?url=https://rafael.laboissiere.net/m1-miashs-2025-s7/Xo7Yei8e/savedata.php";
+    "../../savedata.php";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
   console.log(">>>>>>>> ENVOI JSON", JSON.stringify(data));
