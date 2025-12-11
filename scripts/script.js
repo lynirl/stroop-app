@@ -43,6 +43,15 @@ localStorage.removeItem("participantData");
 
 //creation du quiz
 const quiz = new Quiz(1);
+
+//définition du pourcentage de la congruence
+let congrPercent;
+if(quiz.getQuizType() == 1){
+  congrPercent = 80;
+} else {
+  congrPercent = 20;
+}
+
 user.setQuiz(quiz);
 console.log("Quiz questions : ", quiz.questions);
 
@@ -95,6 +104,7 @@ function endQuiz() {
   user: {
     age: user.age,
     genre: user.genre,
+    congr: congrPercent + "%",
     lateralite: user.lateralite,
     daltonisme: user.daltonisme,
     periph: user.periph

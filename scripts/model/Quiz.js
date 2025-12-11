@@ -97,4 +97,8 @@ export class Quiz {
   getScore() {
     return this.answers.filter((answer) => answer.isCorrect()).length;
   }
+
+  getQuizType(){
+    return this.quizType;
+  }
 }
