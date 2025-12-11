@@ -93,7 +93,6 @@ function endQuiz() {
   //envoyer les donnees
   savedata({
   user: {
-    nom: user.nom,
     age: user.age,
     genre: user.genre,
     lateralite: user.lateralite,
