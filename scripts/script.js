@@ -29,6 +29,11 @@ const ui = {
   wrongSign: document.getElementById("wrong-sign"),
 };
 
+
+// récupération des query params
+const urlParams = new URLSearchParams(window.location.search);
+const quizType = urlParams.get("quiztype");
+
 //données du formulaire
 let participantData = JSON.parse(localStorage.getItem("participantData")) || {};
 console.log("participant data:", participantData);
@@ -42,7 +47,15 @@ const user = new User(formData);
 localStorage.removeItem("participantData");
 
 //creation du quiz
-const quiz = new Quiz(1);
+let quiz;
+
+if (quizType === "1") {
+  quiz = new Quiz(1);
+} else {
+  quiz = new Quiz(2);
+}
+
+console.log("Quiz type :", quiz.getQuizType());
 
 //définition du pourcentage de la congruence
 let congrPercent;
@@ -98,6 +111,8 @@ function endQuiz() {
   ui.endScreen.style.display = "block";
 
   isMouseLocked = false;
+
+  console.log(results)
 
   //envoyer les donnees
   savedata({
@@ -166,6 +181,7 @@ let isAnswerLocked = true;
 
 //bouton demarrer
 // (on initie tout)
+if (ui.btnStart){
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
   document.getElementById("warning-message").style.display = "none";
@@ -181,7 +197,7 @@ ui.btnStart.addEventListener("click", () => {
   coordSamples = [];
   isTracking = true;
 });
-
+}
 //bouton de reponse
 for (let answerButton of ui.answerButtons) {
   answerButton.addEventListener("click", (evt) => {
@@ -277,3 +293,11 @@ function trackingMouse() {
   }
   loop();
 }
+
+// Navigation 
+function navigateTo(page) {
+  let quiztype = quiz?.getQuizType() || urlParams.get('quiztype') || '1';
+  window.location.href = `${page}?quiztype=${quiztype}`;
+}
+
+window.navigateTo = navigateTo;
