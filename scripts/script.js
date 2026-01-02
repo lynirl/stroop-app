@@ -30,7 +30,7 @@ const ui = {
   quizCounter: document.getElementById("quiz-counter"), // Ajouter cet élément dans le HTML
 };
 
-//données du formulaire
+//donnees du formulaire
 let participantData = JSON.parse(localStorage.getItem("participantData")) || {};
 console.log("participant data:", participantData);
 
@@ -38,10 +38,11 @@ console.log("participant data:", participantData);
 let formData = JSON.parse(localStorage.getItem("participantData")) || {};
 const user = new User(formData);
 
-// ===== GESTION DES 6 QUIZ =====
+//gestion des quiz
 const TOTAL_QUIZZES = 6;
 let currentQuizNumber = 1;
-let allQuizResults = []; // Stocke les résultats des 6 quiz
+//pour les resultats des quiz
+let allQuizResults = [];
 
 //creation du premier quiz
 let quiz = new Quiz(currentQuizNumber);
@@ -159,10 +160,10 @@ function endAllQuizzes() {
 
   isMouseLocked = false;
 
-  // Nettoyer le localStorage maintenant
+  //clean le localstorage
   localStorage.removeItem("participantData");
 
-  //envoyer TOUTES les données des 6 quiz
+  //envoyer TOUTES les donnees des 6 quiz
   savedata({
     user: {
       nom: user.nom,
@@ -340,5 +341,5 @@ function trackingMouse() {
   loop();
 }
 
-// Initialiser le compteur au démarrage
+//au demarrage, compteur
 updateQuizCounter();
