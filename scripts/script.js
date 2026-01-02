@@ -27,48 +27,28 @@ const ui = {
   btnRestart: document.getElementById("btn-restart"),
   answerButtons: document.querySelectorAll(".answer-button"),
   wrongSign: document.getElementById("wrong-sign"),
+  quizCounter: document.getElementById("quiz-counter"), // Ajouter cet élément dans le HTML
 };
-
-
-// récupération des query params
-const urlParams = new URLSearchParams(window.location.search);
-const quizType = urlParams.get("quiztype");
 
 //données du formulaire
 let participantData = JSON.parse(localStorage.getItem("participantData")) || {};
 console.log("participant data:", participantData);
 
 //creation de l'user
-//en utilisant le localstorage
 let formData = JSON.parse(localStorage.getItem("participantData")) || {};
-
 const user = new User(formData);
-//nettoyer pour la session suivante
-localStorage.removeItem("participantData");
 
-//creation du quiz
-let quiz;
+// ===== GESTION DES 6 QUIZ =====
+const TOTAL_QUIZZES = 6;
+let currentQuizNumber = 1;
+let allQuizResults = []; // Stocke les résultats des 6 quiz
 
-if (quizType === "1") {
-  quiz = new Quiz(1);
-} else {
-  quiz = new Quiz(2);
-}
-
-console.log("Quiz type :", quiz.getQuizType());
-
-//définition du pourcentage de la congruence
-let congrPercent;
-if(quiz.getQuizType() == 1){
-  congrPercent = 80;
-} else {
-  congrPercent = 20;
-}
-
+//creation du premier quiz
+let quiz = new Quiz(currentQuizNumber);
 user.setQuiz(quiz);
 console.log("Quiz questions : ", quiz.questions);
 
-//et du json final
+//résultats du quiz actuel
 let results = [];
 
 // Chronos
@@ -80,6 +60,17 @@ let hasMoved = false;
 
 //Réponses infos
 let rightAnswerValue = "";
+
+// Mettre à jour l'affichage du compteur
+function updateQuizCounter() {
+  if (ui.quizCounter) {
+    ui.quizCounter.innerHTML = `Quiz ${currentQuizNumber} / ${TOTAL_QUIZZES}`;
+  }
+  // Aussi dans le titre du bouton start
+  ui.btnStart.innerHTML = currentQuizNumber === 1 
+    ? "Démarrer" 
+    : `Continuer (${currentQuizNumber}/${TOTAL_QUIZZES})`;
+}
 
 //afficher une question
 function showCurrentQuestion() {
@@ -96,36 +87,93 @@ function showCurrentQuestion() {
   }, 300);
 }
 
-//finir le quiz
+//passer au quiz suivant
+function nextQuiz() {
+  // Stocker les résultats du quiz actuel
+  allQuizResults.push({
+    quizNumber: currentQuizNumber,
+    quizTitle: quiz.title,
+    score: quiz.getScore(),
+    total: quiz.questions.length,
+    trials: results
+  });
+
+  currentQuizNumber++;
+
+  if (currentQuizNumber <= TOTAL_QUIZZES) {
+    // Créer le prochain quiz
+    quiz = new Quiz(currentQuizNumber);
+    user.setQuiz(quiz);
+    results = []; // Reset pour le prochain quiz
+
+    console.log(`\n=== QUIZ ${currentQuizNumber}/${TOTAL_QUIZZES} ===`);
+    console.log("Quiz questions : ", quiz.questions);
+
+    // Vider le texte et afficher le bouton
+    ui.colorText.innerHTML = "";
+    ui.btnStart.style.display = "block";
+    ui.btnStart.innerHTML = `Quiz suivant (${currentQuizNumber}/${TOTAL_QUIZZES})`;
+    
+    updateQuizCounter();
+    isMouseLocked = true;
+    isAnswerLocked = true;
+  } else {
+    // Tous les quiz sont terminés
+    endAllQuizzes();
+  }
+}
+
+//finir UN quiz (passer au suivant)
 function endQuiz() {
-  // on calcule le score
   const score = quiz.getScore();
   const total = quiz.questions.length;
+
+  console.log(`Quiz ${currentQuizNumber} terminé: ${score}/${total}`);
+
+  // Passer au quiz suivant au lieu de tout terminer
+  nextQuiz();
+}
+
+//finir TOUS les quiz (à la fin du 6ème)
+function endAllQuizzes() {
+  // Calculer le score total
+  let totalScore = 0;
+  let totalQuestions = 0;
+  
+  allQuizResults.forEach(qr => {
+    totalScore += qr.score;
+    totalQuestions += qr.total;
+  });
 
   //ça masque les elements du jeu
   ui.gameContainer.style.display = "none";
   ui.colorText.style.display = "none";
 
   //ecran de fin
-  ui.finalScore.innerHTML = `Score : ${score} / ${total}`;
+  ui.finalScore.innerHTML = `
+    <h2>Expérience terminée !</h2>
+    <p>Score total : ${totalScore} / ${totalQuestions}</p>
+    <p>6 quiz complétés</p>
+  `;
   ui.endScreen.style.display = "block";
 
   isMouseLocked = false;
 
-  console.log(results)
+  // Nettoyer le localStorage maintenant
+  localStorage.removeItem("participantData");
 
-  //envoyer les donnees
+  //envoyer TOUTES les données des 6 quiz
   savedata({
-  user: {
-    age: user.age,
-    genre: user.genre,
-    congr: congrPercent + "%",
-    lateralite: user.lateralite,
-    daltonisme: user.daltonisme,
-    periph: user.periph
-  },
-  quiz: quiz.title,
-  trials: results
+    user: {
+      nom: user.nom,
+      age: user.age,
+      genre: user.genre,
+      lateralite: user.lateralite,
+      daltonisme: user.daltonisme,
+      periph: user.periph
+    },
+    totalQuizzes: TOTAL_QUIZZES,
+    allResults: allQuizResults
   });
 }
 
@@ -171,6 +219,7 @@ function submitAnswer(colorClickedFR) {
   //passer à la suite (ou non)
   if (quiz.goNext()) {
     ui.btnStart.style.display = "block";
+    ui.btnStart.innerHTML = "Continuer";
     ui.colorText.innerHTML = "";
   } else {
     endQuiz();
@@ -181,7 +230,6 @@ let isAnswerLocked = true;
 
 //bouton demarrer
 // (on initie tout)
-if (ui.btnStart){
 ui.btnStart.addEventListener("click", () => {
   showCurrentQuestion();
   document.getElementById("warning-message").style.display = "none";
@@ -197,7 +245,7 @@ ui.btnStart.addEventListener("click", () => {
   coordSamples = [];
   isTracking = true;
 });
-}
+
 //bouton de reponse
 for (let answerButton of ui.answerButtons) {
   answerButton.addEventListener("click", (evt) => {
@@ -252,8 +300,7 @@ function endTimer() {
 //sauvegarder les données
 function savedata(data) {
   let xhr = new XMLHttpRequest();
-  let url =
-    "../../savedata.php";
+  let url = "../../savedata.php";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
   console.log(">>>>>>>> ENVOI JSON", JSON.stringify(data));
@@ -261,13 +308,12 @@ function savedata(data) {
 }
 
 //coordonnees des clics
-
 let isTracking = false;
 let coordSamples = [];
 let isTrackingLoopRunning = false;
 
 function trackingMouse() {
-  if (isTrackingLoopRunning) return; // éviter les doublons
+  if (isTrackingLoopRunning) return;
   isTrackingLoopRunning = true;
 
   const targetDelta = 1000 / 70;
@@ -294,10 +340,5 @@ function trackingMouse() {
   loop();
 }
 
-// Navigation 
-function navigateTo(page) {
-  let quiztype = quiz?.getQuizType() || urlParams.get('quiztype') || '1';
-  window.location.href = `${page}?quiztype=${quiztype}`;
-}
-
-window.navigateTo = navigateTo;
+// Initialiser le compteur au démarrage
+updateQuizCounter();
