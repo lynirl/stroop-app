@@ -160,7 +160,6 @@ function endAllQuizzes() {
   //envoyer TOUTES les donnees des 6 quiz
   savedata({
     user: {
-      nom: user.nom,
       age: user.age,
       genre: user.genre,
       lateralite: user.lateralite,
