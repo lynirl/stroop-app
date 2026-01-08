@@ -13,4 +13,6 @@ document.getElementById("user-form").addEventListener("submit", function (e) {
 
     //on met dans localStorage pq on peut pas le passer a main.html
     localStorage.setItem("participantData", JSON.stringify(formData));
+
+    window.location.href = "main.html";
 });
