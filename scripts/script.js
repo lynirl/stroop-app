@@ -208,6 +208,7 @@ function submitAnswer(colorClickedFR) {
     inkColor: q.colorName,
     answer: colorClickedFR,
     correct: ans.isCorrect(),
+    congruency: q.congruency,
     initiationTime: initiationTime,
     movementTime: movementTime,
     timestamp: Date.now(),
