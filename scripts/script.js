@@ -338,10 +338,4 @@ function trackingMouse() {
 //au demarrage, compteur
 updateQuizCounter();
 
-// Navigation 
-function navigateTo(page) {
-  let quiztype = quiz?.getQuizType() || urlParams.get('quiztype') || '1';
-  window.location.href = `${page}?quiztype=${quiztype}`;
-}
-
 window.navigateTo = navigateTo;
