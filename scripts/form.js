@@ -5,7 +5,6 @@ document.getElementById("user-form").addEventListener("submit", function (e) {
     e.preventDefault();
 
     const formData = {
-      nom: document.getElementById("nom").value,
       age: document.getElementById("age").value,
       genre: document.getElementById("genre").value,
       lateralite: document.getElementById("lateralite").value,
