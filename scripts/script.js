@@ -44,8 +44,14 @@ let currentQuizNumber = 1;
 //pour les resultats des quiz
 let allQuizResults = [];
 
+//fonction pour déterminer le type de quiz
+function getQuizType(quizNumber) {
+  //les 3 premiers quiz sont du type 1, les 3 autres du type 2
+  return quizNumber <= 3 ? 1 : 2;
+}
+
 //creation du premier quiz
-let quiz = new Quiz(currentQuizNumber);
+let quiz = new Quiz(getQuizType(currentQuizNumber));
 user.setQuiz(quiz);
 console.log("Quiz questions : ", quiz.questions);
 
@@ -61,17 +67,6 @@ let hasMoved = false;
 
 //Réponses infos
 let rightAnswerValue = "";
-
-// Mettre à jour l'affichage du compteur
-function updateQuizCounter() {
-  if (ui.quizCounter) {
-    ui.quizCounter.innerHTML = `Quiz ${currentQuizNumber} / ${TOTAL_QUIZZES}`;
-  }
-  // Aussi dans le titre du bouton start
-  ui.btnStart.innerHTML = currentQuizNumber === 1 
-    ? "Démarrer" 
-    : `Continuer (${currentQuizNumber}/${TOTAL_QUIZZES})`;
-}
 
 //afficher une question
 function showCurrentQuestion() {
@@ -90,10 +85,11 @@ function showCurrentQuestion() {
 
 //passer au quiz suivant
 function nextQuiz() {
-  // Stocker les résultats du quiz actuel
+  //on stocke les résultats du quiz actuel
   allQuizResults.push({
     quizNumber: currentQuizNumber,
     quizTitle: quiz.title,
+    quizType: getQuizType(currentQuizNumber),
     score: quiz.getScore(),
     total: quiz.questions.length,
     trials: results
@@ -102,12 +98,10 @@ function nextQuiz() {
   currentQuizNumber++;
 
   if (currentQuizNumber <= TOTAL_QUIZZES) {
-    // Créer le prochain quiz
-    quiz = new Quiz(currentQuizNumber);
+    //et on crée le prochain avec le bon type
+    quiz = new Quiz(getQuizType(currentQuizNumber));
     user.setQuiz(quiz);
     results = []; // Reset pour le prochain quiz
-
-    console.log(`\n=== QUIZ ${currentQuizNumber}/${TOTAL_QUIZZES} ===`);
     console.log("Quiz questions : ", quiz.questions);
 
     // Vider le texte et afficher le bouton
