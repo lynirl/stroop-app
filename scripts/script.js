@@ -68,6 +68,18 @@ let hasMoved = false;
 //Réponses infos
 let rightAnswerValue = "";
 
+// Mettre à jour l'affichage du compteur
+function updateQuizCounter() {
+  if (ui.quizCounter) {
+    const quizType = getQuizType(currentQuizNumber);
+    ui.quizCounter.innerHTML = `Quiz ${currentQuizNumber} / ${TOTAL_QUIZZES} (Type ${quizType})`;
+  }
+  // Aussi dans le titre du bouton start
+  ui.btnStart.innerHTML = currentQuizNumber === 1 
+    ? "Démarrer" 
+    : `Continuer (${currentQuizNumber}/${TOTAL_QUIZZES})`;
+}
+
 //afficher une question
 function showCurrentQuestion() {
   // Afficher le texte au bout de 300ms
@@ -337,5 +349,3 @@ function trackingMouse() {
 
 //au demarrage, compteur
 updateQuizCounter();
-
-window.navigateTo = navigateTo;

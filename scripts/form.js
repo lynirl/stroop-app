@@ -1,4 +1,3 @@
-
 //on récupère le form et on y ajoute un eventListener
 document.getElementById("user-form").addEventListener("submit", function (e) {
     //pr pas utiliser le post de base
@@ -15,9 +14,3 @@ document.getElementById("user-form").addEventListener("submit", function (e) {
     //on met dans localStorage pq on peut pas le passer a main.html
     localStorage.setItem("participantData", JSON.stringify(formData));
 });
-
-// Navigation 
-function navigateTo(page) {
-  let quiztype = quiz?.getQuizType() || urlParams.get('quiztype') || '1';
-  window.location.href = `${page}?quiztype=${quiztype}`;
-}
